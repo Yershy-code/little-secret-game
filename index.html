@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>Little Secret Online</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2em;
+    }
+    .card {
+      background: white;
+      padding: 2em;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+    button {
+      padding: 0.7em 1.5em;
+      font-size: 1em;
+      border: none;
+      border-radius: 8px;
+      background: #007BFF;
+      color: white;
+      cursor: pointer;
+      margin-top: 1em;
+    }
+    input {
+      padding: 0.5em;
+      width: 80%;
+      margin-top: 1em;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Little Secret Online</h2>
+    <input type="text" id="playerName" placeholder="Twoje imię">
+    <button onclick="startGame()">Dołącz do gry</button>
+    <div id="result" style="margin-top: 2em;"></div>
+  </div>
+
+  <script>
+    const wordPairs = [
+      ["pizza", "hamburger"],
+      ["kot", "pies"],
+      ["rower", "hulajnoga"],
+      ["książka", "gazeta"],
+      ["morze", "jezioro"],
+    ];
+
+    function startGame() {
+      const name = document.getElementById("playerName").value.trim();
+      if (!name) {
+        alert("Wpisz swoje imię!");
+        return;
+      }
+
+      const players = JSON.parse(localStorage.getItem("players") || "[]");
+      const joined = players.some(p => p.name === name);
+
+      if (!joined) {
+        players.push({ name });
+        localStorage.setItem("players", JSON.stringify(players));
+      }
+
+      const isSpy = players.length === 1 ? Math.random() < 0.25 : false;
+      const pair = wordPairs[Math.floor(Math.random() * wordPairs.length)];
+      const word = isSpy ? pair[1] : pair[0];
+
+      document.getElementById("result").innerHTML = `<h3>Cześć, ${name}!</h3><p>Twoje hasło to:</p><h2>${word}</h2><p>Nie pokazuj go innym!</p>`;
+    }
+  </script>
+</body>
+</html>
